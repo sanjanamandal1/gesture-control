@@ -1,4 +1,4 @@
-mediapipe
+mediapipe==0.10.13
 opencv-python
 pyautogui
 numpy
@@ -6,3 +6,4 @@ scikit-learn
 pygetwindow
 pycaw
 comtypes
+imageio

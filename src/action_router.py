@@ -42,7 +42,6 @@ GESTURE_MAP = {
     "next_slide":   lambda: pyautogui.press("right"),
     "prev_slide":   lambda: pyautogui.press("left"),
     "play_pause":   lambda: pyautogui.press("space"),
-    "screenshot":   lambda: pyautogui.hotkey("ctrl", "shift", "s"),
     "scroll_up":    lambda: pyautogui.scroll(5),
     "scroll_down":  lambda: pyautogui.scroll(-5),
     "next_track":   lambda: pyautogui.hotkey("ctrl", "right"),
@@ -52,14 +51,15 @@ GESTURE_MAP = {
     "lock_screen":  lambda: pyautogui.hotkey("win", "l"),
     "close_window": lambda: pyautogui.hotkey("alt", "f4"),
     "minimize_all": lambda: pyautogui.hotkey("win", "d"),
-    "max_volume":   lambda: [volume_ctrl.SetMasterVolumeLevelScalar(1.0, None) if HAS_VOLUME else None],
+    "max_volume":   lambda: volume_ctrl.SetMasterVolumeLevelScalar(1.0, None) if HAS_VOLUME else None,
     "mute":         lambda: pyautogui.hotkey("volumemute"),
     "screenshot":   lambda: pyautogui.hotkey("win", "shift", "s"),
 }
 
-def execute(gesture_name, mapped_action=None):
+def execute(gesture_name, mapped_action=None, bypass_cooldown=False):
     action = mapped_action if mapped_action else gesture_name
-    if action in GESTURE_MAP and _can_fire(action):
-        GESTURE_MAP[action]()
-        return True
+    if action in GESTURE_MAP:
+        if bypass_cooldown or _can_fire(action):
+            GESTURE_MAP[action]()
+            return True
     return False

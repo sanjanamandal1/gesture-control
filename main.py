@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import cv2, time, sys
 from src.hand_tracker import HandTracker
 from src.gesture_classifier import GestureClassifier, record_gesture, train_model
@@ -82,7 +84,11 @@ def main():
                     
                     detected = [g for g in [g1, g2] if g]
                     combo = combo_detector.update(detected)
-
+                    if combo:
+                        execute(combo, bypass_cooldown=True)
+                        cv2.putText(frame, f"COMBO: {combo.replace('_',' ').upper()}!",
+                                    (10, 210), cv2.FONT_HERSHEY_SIMPLEX,
+                                    0.8, (0, 255, 200), 2)
                     # Show combo progress bar
                     progress = combo_detector.get_progress()
                     if progress > 0:
