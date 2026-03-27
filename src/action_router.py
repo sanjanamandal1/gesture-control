@@ -1,6 +1,5 @@
 import pyautogui, time, platform
 
-# Windows-only volume control
 try:
     from ctypes import cast, POINTER
     from comtypes import CLSCTX_ALL
@@ -14,7 +13,7 @@ except Exception:
 
 pyautogui.FAILSAFE = False
 _last_action_time = {}
-COOLDOWN = 0.8  # seconds between same action
+COOLDOWN = 0.8
 
 def _can_fire(action_name):
     now = time.time()
@@ -22,17 +21,6 @@ def _can_fire(action_name):
         _last_action_time[action_name] = now
         return True
     return False
-
-GESTURE_MAP = {
-    "volume_up":    lambda: _volume_up(),
-    "volume_down":  lambda: _volume_down(),
-    "next_slide":   lambda: pyautogui.press("right"),
-    "prev_slide":   lambda: pyautogui.press("left"),
-    "play_pause":   lambda: pyautogui.press("space"),
-    "screenshot":   lambda: pyautogui.hotkey("ctrl", "shift", "s"),
-    "scroll_up":    lambda: pyautogui.scroll(5),
-    "scroll_down":  lambda: pyautogui.scroll(-5),
-}
 
 def _volume_up():
     if HAS_VOLUME:
@@ -48,8 +36,24 @@ def _volume_down():
     else:
         pyautogui.hotkey("volumedown")
 
-def execute(gesture_name):
-    if gesture_name in GESTURE_MAP and _can_fire(gesture_name):
-        GESTURE_MAP[gesture_name]()
+GESTURE_MAP = {
+    "volume_up":    lambda: _volume_up(),
+    "volume_down":  lambda: _volume_down(),
+    "next_slide":   lambda: pyautogui.press("right"),
+    "prev_slide":   lambda: pyautogui.press("left"),
+    "play_pause":   lambda: pyautogui.press("space"),
+    "screenshot":   lambda: pyautogui.hotkey("ctrl", "shift", "s"),
+    "scroll_up":    lambda: pyautogui.scroll(5),
+    "scroll_down":  lambda: pyautogui.scroll(-5),
+    "next_track":   lambda: pyautogui.hotkey("ctrl", "right"),
+    "prev_track":   lambda: pyautogui.hotkey("ctrl", "left"),
+    "next_tab":     lambda: pyautogui.hotkey("ctrl", "tab"),
+    "prev_tab":     lambda: pyautogui.hotkey("ctrl", "shift", "tab"),
+}
+
+def execute(gesture_name, mapped_action=None):
+    action = mapped_action if mapped_action else gesture_name
+    if action in GESTURE_MAP and _can_fire(action):
+        GESTURE_MAP[action]()
         return True
     return False

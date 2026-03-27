@@ -3,6 +3,7 @@ from src.hand_tracker import HandTracker
 from src.gesture_classifier import GestureClassifier, record_gesture, train_model
 from src.action_router import execute
 from src.hud_overlay import draw_hud
+from src.app_mode import get_active_app, get_mapped_action
 
 RECORD_MODE    = "--record" in sys.argv
 TRAIN_MODE     = "--train"  in sys.argv
@@ -59,7 +60,13 @@ def main():
                 finger_states = tracker.get_finger_states(lm)
                 gesture, conf = classifier.predict(lm)
                 if gesture:
-                    execute(gesture)
+                    active_app     = get_active_app()
+                    mapped_action = get_mapped_action(gesture, active_app)
+                    execute(gesture, mapped_action)
+
+                    cv2.putText(frame, f"Mode: {active_app}",
+                                (10, 120), cv2.FONT_HERSHEY_SIMPLEX,
+                                0.6, (255, 200, 0), 2)
 
         fps       = 1.0 / max(time.time() - prev_time, 1e-5)
         prev_time = time.time()
