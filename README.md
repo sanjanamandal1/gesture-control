@@ -27,7 +27,7 @@ A real-time gesture recognition system that lets you control your PC using hand 
 | Thumbs down | Volume down |
 | Open palm | Play / Pause |
 | Peace sign | Next slide |
-| Spread fingers | Scroll up |
+| Index Finger | Scroll up |
 | Closed fist | Scroll down |
 
 ## Two-hand combos
