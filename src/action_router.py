@@ -49,6 +49,12 @@ GESTURE_MAP = {
     "prev_track":   lambda: pyautogui.hotkey("ctrl", "left"),
     "next_tab":     lambda: pyautogui.hotkey("ctrl", "tab"),
     "prev_tab":     lambda: pyautogui.hotkey("ctrl", "shift", "tab"),
+    "lock_screen":  lambda: pyautogui.hotkey("win", "l"),
+    "close_window": lambda: pyautogui.hotkey("alt", "f4"),
+    "minimize_all": lambda: pyautogui.hotkey("win", "d"),
+    "max_volume":   lambda: [volume_ctrl.SetMasterVolumeLevelScalar(1.0, None) if HAS_VOLUME else None],
+    "mute":         lambda: pyautogui.hotkey("volumemute"),
+    "screenshot":   lambda: pyautogui.hotkey("win", "shift", "s"),
 }
 
 def execute(gesture_name, mapped_action=None):

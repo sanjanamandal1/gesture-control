@@ -51,7 +51,7 @@ def train_model():
 
 # ── Inference ──────────────────────────────────────────────────────────────
 class GestureClassifier:
-    def __init__(self, confidence_threshold=0.80):
+    def __init__(self, confidence_threshold=0.45):
         self.threshold = confidence_threshold
         self.model = None
         self.encoder = None
@@ -64,13 +64,12 @@ class GestureClassifier:
             self.model = data["model"]
             self.encoder = data["encoder"]
 
-    def predict(self, landmarks):
-        """Returns (gesture_name, confidence) or (None, 0)."""
+    def predict(self, landmarks, use_threshold=True):
         if self.model is None or len(landmarks) == 0:
             return None, 0.0
         probs = self.model.predict_proba([landmarks])[0]
         best  = np.argmax(probs)
         conf  = probs[best]
-        if conf >= self.threshold:
+        if not use_threshold or conf >= self.threshold:
             return self.encoder.inverse_transform([best])[0], float(conf)
         return None, float(conf)
