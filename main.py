@@ -20,6 +20,10 @@ def main():
     tracker         = HandTracker()
     classifier      = GestureClassifier()
     cap             = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cv2.namedWindow("Gesture Control", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Gesture Control", 1280, 720)
     prev_time       = time.time()
     samples         = 0
     countdown_start = time.time()
@@ -119,6 +123,7 @@ def main():
 
         recorder.capture(frame)
 
+        display_frame = cv2.resize(frame, (1280, 720))
         cv2.imshow("Gesture Control", frame)
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
