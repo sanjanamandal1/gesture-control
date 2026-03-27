@@ -4,6 +4,7 @@ from src.gesture_classifier import GestureClassifier, record_gesture, train_mode
 from src.action_router import execute
 from src.hud_overlay import draw_hud
 from src.app_mode import get_active_app, get_mapped_action
+from src.gif_recorder import GifRecorder
 
 RECORD_MODE    = "--record" in sys.argv
 TRAIN_MODE     = "--train"  in sys.argv
@@ -21,6 +22,7 @@ def main():
     prev_time       = time.time()
     samples         = 0
     countdown_start = time.time()
+    recorder        = GifRecorder(fps=10, max_seconds=5)
     COUNTDOWN       = 3
 
     if RECORD_MODE:
@@ -72,9 +74,27 @@ def main():
         prev_time = time.time()
         frame     = draw_hud(frame, gesture, conf, fps, finger_states)
 
+        # GIF recording overlay
+        if recorder.is_recording():
+            remaining = recorder.max_frames_count() - recorder.frame_count()
+            secs_left = remaining // recorder.fps
+            cv2.putText(frame, f"REC {secs_left}s",
+                        (10, 160), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7, (0, 0, 255), 2)
+            cv2.circle(frame, (200, 155), 8, (0, 0, 255), -1)
+
+        recorder.capture(frame)
+
         cv2.imshow("Gesture Control", frame)
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
             break
+        elif key == ord("g"):
+            recorder.toggle()
+            if recorder.is_recording():
+                print("Recording GIF — perform your gestures!")
+            else:
+                print("GIF recording stopped.")
 
     cap.release()
     cv2.destroyAllWindows()
