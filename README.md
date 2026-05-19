@@ -1,6 +1,6 @@
 # Gesture Control Interface
 
-Control your computer in real-time using hand gestures via webcam — no special hardware needed.
+Control your computer in real-time using hand gestures via webcam — no special hardware needed.😶‍🌫️
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10.13-green)
